@@ -37,6 +37,13 @@ function ethernet_led() {
 	#read GPIO_DIR_31_00
 	val=`devmem $GPIO_DIR_31_00`
 	#toggle bit 0 to 1 to enable output on bnm_gpio_000
+	val=$(($val & $PINMUX_MASK_3))
+	#write GPIO_PER_DIR_31_00
+	devmem $GPIO_DIR_31_00 32 $val
+	
+	#read GPIO_DIR_31_00
+	val=`devmem $GPIO_DIR_31_00`
+	#toggle bit 0 to 1 to enable output on bnm_gpio_000
 	val=$(($val & $PINMUX_MASK_4))
 	#write GPIO_PER_DIR_31_00
 	devmem $GPIO_DIR_31_00 32 $val
