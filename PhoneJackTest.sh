@@ -8,8 +8,8 @@
 #  > Funciton:  Phone Jack Port Voltage loop test
 #  > Version :  v1.0 
 #  > HowToUse:  tftp -g -r PhoneJackTest 192.168.0.11
-#               chmod 777 PhoneJackTest
-#               please input on / off / start
+#               chmod 775 PhoneJackTest
+#               ./PhoneJackTest on / off / start
 # *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*
 
 function set_hight(){

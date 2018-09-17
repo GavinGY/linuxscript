@@ -1,6 +1,17 @@
 #!/bin/bash
 
-#CPU: BCM 3390Z B0	
+# *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*
+#  > Author  ： Gavin | Zhang GuiYang
+#  > Mail    ： gavin.gy.zhang@gmail.com
+#  > Date    ： 2018.07.28
+#  > Company ： Foxconn·CNSBG·CPEGBBD·RD
+#  > Funciton:  XB6 Ethernet LED Control
+#  > Version :  v1.0 
+#  > HowToUse:  cd /tmp
+#               tftp -g -r Ethernet_LED_Control.sh 192.168.0.11
+#               chmod 775 Ethernet_LED_Control.sh
+#               ./Ethernet_LED_Control.sh on/off
+# *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*
 
 function ethernet_led() {
 
@@ -55,22 +66,20 @@ function ethernet_led() {
 		val=`devmem $GPIO_DATA_31_00`
 		val=$(($val | 0x01E00000))  # 1 ==> 27:24 E ==> 23:20 | 31:28 27:24 23:20 19:16 15:12 11:8 7:4 3:0
 		devmem $GPIO_DATA_31_00 32 $val
-		echo hello-gavin led on
+		echo led on
     else #led_off
 		val=`devmem $GPIO_DATA_31_00`
 		val=$(($val & 0xFE1FFFFF))
 		devmem $GPIO_DATA_31_00 32 $val
-		echo hello-gavin led off
+		echo led off
     fi
 }
 
 
 if [ $1 = "on" ]; then
    ethernet_led 1
-   #echo hello-gavin led on
 elif [ $1 = "off" ]; then 
    ethernet_led 0
-   #echo hello-gavin led off
 else
     echo "please input on or off"
 fi     
