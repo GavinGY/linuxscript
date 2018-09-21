@@ -66,6 +66,7 @@ HERE
 	sed -i "s/#define FOXCONN_SOFTWARE_VERSION.*/$Str2/g" $Path2
     ./build_package.sh cm CmBldr cleanall B0
     ./build_package.sh cm CmBldr B0
+    cp -f images/3390/B0/bcm93390smwvg/rg_cm_pc20_components_prod/bcm93390smwvg_pc20/* ../rdkm_17.1.3/meta-rdk-broadcom-generic-rdk/meta-brcm93390/recipes-foxconn/factorytools/factorytools/
 
     #cd ../$rdk_folder/
     #git status
@@ -82,9 +83,24 @@ HERE
     p006_v6 p005+cmpart+qtn+nvram_mount 
 
     rm -rf build-brcm93390
+    rm -rf sstate-cache/
     source meta-rdk-broadcom-generic-rdk/setup-environment-broadcom-generic-rdkb
     1
     bitbake rdk-generic-broadband-image
+
+
+# xb6.5
+scp tmp/deploy/images/brcm93390smwvg/rdk-generic-broadband-image-brcm93390smwvg.tar.gz gavin@10.141.198.146:/opt/tools_xb6.5/PCITool/img-components/
+./pci2.sh Prod_18.2ER2_lab2a_20180912 3 zImage-18.2ER2_FXC.bin
+
+# xb6
+scp tmp/deploy/images/brcm93390/rdk-generic-broadband-image-brcm93390.tar.gz gavin@10.141.198.146:/opt/tools_xb6/PCITool/img-components/
+cd /opt/tools_xb6/PCITool/img-components/rootfs/
+rm -rf ./*
+tar zxvf ../rdk-generic-broadband-image-brcm93390.tar.gz
+cd ../../
+./pci2.sh PCI0_Prod_17.1.3_VDT_P01 1 zImage
+ll workdir/
 
     #cp -f tmp/deploy/images/brcm93390/rdk-generic-broadband-image-brcm93390.tar.gz $pci_tool_location
 	#cp -f tmp/deploy/images/brcm93390/zImage $pci_tool_location

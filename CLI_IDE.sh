@@ -8,9 +8,26 @@
 #  > Company ： Foxconn·CNSBG·CPEGBBD·RD
 #  > Funciton:  
 #  > Version :  v1.0 
-#  > HowToUse:  sudo vi /etc/profile
+#  > HowToUse:  sudo apt-get install tcl | apt-get install expect
+#				http://www.tcl.tk
+#				wget http://nchc.dl.sourceforge.net/sourceforge/tcl/tcl8.4.11-src.tar.gz
+#					tar xfvz tcl8.4.11-src.tar.gz
+#					cd tcl8.4.11/unix
+#					./configure --prefix=/usr/tcl --enable-shared 
+#					make
+#					make install
+#				http://expect.nist.gov/
+#				wget http://sourceforge.net/projects/expect/files/Expect/5.45/expect5.45.tar.gz
+#					tar xzvf expect5.45.tar.gz
+#					cd expect5.45 
+#					./configure --prefix=/usr/expect --with-tcl=/usr/tcl/lib --with-tclinclude=../tcl8.4.11/generic
+#					make
+#					make install
+#					ln -s /usr/tcl/bin/expect /usr/expect/bin/expect
+#
+#				sudo vi /etc/profile | vi ~/.bashrc
 #               export PATH=/home/gavin/project/linuxscript:$PATH
-#               source /etc/profile
+#               source /etc/profile  | source ~/.bashrc
 # *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*
 
 LH_Server=10.141.198.146
@@ -33,6 +50,11 @@ case $1 in
         echo "RDK = OpenBFC RDK-M" 
         case $2 in
         	build)
+                # xb6.5
+                # rm -rf build-brcm93390smwvg
+                # source meta-rdk-broadcom-generic-rdk/setup-environment-broadcom-generic-rdkb
+                # bitbake rdk-generic-broadband-image
+                
 		        rm -rf build-brcm93390
 				echo -e "1\n" | source meta-rdk-broadcom-generic-rdk/setup-environment-broadcom-generic-rdkb
    				#yes 1 | head -1
@@ -49,17 +71,28 @@ case $1 in
     	echo "Create PCI image or downloand iamge."  
         case $2 in
         	build)
-				echo -e "$gavin_password\n" | scp tmp/deploy/images/brcm93390/zImage gavin@$LH_Server:/opt/tools_xb6/PCITool/img-components/
-				echo -e "$gavin_password\n" | scp tmp/deploy/images/brcm93390/rdk-generic-broadband-image-brcm93390.tar.gz gavin@10.141.198.146:/opt/tools_xb6/PCITool/img-components/
-				
-				cd /opt/tools_xb6/PCITool/img-components/rootfs/
-				rm -rf ./*
-			    ls -l
-			    tar zxvf ../rdk-generic-broadband-image-brcm93390.tar.gz
-			    cd ../../
-			    res=`date +%Y%m%d%H%M`
-			    ./pci2.sh PCI0_Prod_17.1.3_P_$res 1 zImage
-			    ls -l workdir/
+                # xb6.5
+                # scp tmp/deploy/images/brcm93390smwvg/rdk-generic-broadband-image-brcm93390smwvg.tar.gz gavin@10.141.198.146:/opt/tools_xb6.5/PCITool/img-components/
+                # ./pci2.sh Prod_18.2ER2_lab2a_20180912 3 zImage-18.2ER2_FXC.bin
+
+                # xb6
+                # scp tmp/deploy/images/brcm93390/rdk-generic-broadband-image-brcm93390.tar.gz gavin@10.141.198.146:/opt/tools_xb6/PCITool/img-components/
+                # cd /opt/tools_xb6/PCITool/img-components/rootfs/
+                # rm -rf ./*
+                # tar zxvf ../rdk-generic-broadband-image-brcm93390.tar.gz
+                # cd ../../
+                # ./pci2.sh PCI0_Prod_17.1.3_VDT_P01 1 zImage
+
+                echo -e "$gavin_password\n" | scp tmp/deploy/images/brcm93390/zImage gavin@$LH_Server:/opt/tools_xb6/PCITool/img-components/
+				# echo -e "$gavin_password\n" | scp tmp/deploy/images/brcm93390/rdk-generic-broadband-image-brcm93390.tar.gz gavin@10.141.198.146:/opt/tools_xb6/PCITool/img-components/
+				# cd /opt/tools_xb6/PCITool/img-components/rootfs/
+				# rm -rf ./*
+			 #    ls -l
+			 #    tar zxvf ../rdk-generic-broadband-image-brcm93390.tar.gz
+			 #    cd ../../
+			 #    res=`date +%Y%m%d%H%M`
+			 #    ./pci2.sh PCI0_Prod_17.1.3_P_$res 1 zImage
+			 #    ls -l workdir/
 		    	;;
 		    DN)
 

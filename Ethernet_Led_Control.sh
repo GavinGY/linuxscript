@@ -15,49 +15,22 @@
 
 function ethernet_led() {
 
-    # GPHY2_LINK_ACT_N ==> AE1 ==> GPIO_021 ==> CM_TOP_CTRL_PIN_MUX_CTRL_3 ==> 23:20
-    # GPHY2_LINK1G_N   ==> AG3 ==> GPIO_022 ==> CM_TOP_CTRL_PIN_MUX_CTRL_3 ==> 27:24
-    # GPHY0_LINK_ACT_N ==> AF1 ==> GPIO_023 ==> CM_TOP_CTRL_PIN_MUX_CTRL_3 ==> 31:28
-    # GPHY0_LINK1G_N   ==> AF4 ==> GPIO_024 ==> CM_TOP_CTRL_PIN_MUX_CTRL_4 ==> 03:00
+    # GPHY2_LINK_ACT_N ==> AE1 ==> GPIO_021 ==> SUN_TOP_CTRL_PIN_MUX_CTRL_4 ==> 19:16
+    # GPHY2_LINK1G_N   ==> AG3 ==> GPIO_022 ==> SUN_TOP_CTRL_PIN_MUX_CTRL_4 ==> 23:20
+    # GPHY0_LINK_ACT_N ==> AF1 ==> GPIO_023 ==> SUN_TOP_CTRL_PIN_MUX_CTRL_4 ==> 27:24
+    # GPHY0_LINK1G_N   ==> AF4 ==> GPIO_024 ==> SUN_TOP_CTRL_PIN_MUX_CTRL_4 ==> 31:28
     
-	PINMUX_MASK_3=0x000FFFFF
-	PINMUX_MASK_4=0xFFFFFFF0
+    SUN_TOP_CTRL_PIN_MUX_CTRL_4=0xf0404110 #GPHY2_LINK_ACT_N/AE1/GPIO_021 GPHY2_LINK1G_N/AG3/GPIO_022 GPHY0_LINK_ACT_N/AF1/GPIO_023 GPHY0_LINK1G_N/AF4/GPIO_024
+    GPIO_DIR_31_00=0xf040a008              #GPHY 1/2/3/4 SET"0"=> outut
+    GPIO_DATA_31_00=0Xf040a004             #GPHY 1/2/3/4
 
-    CM_TOP_CTRL_PIN_MUX_CTRL_3=0xd388010c  # PIN_MUX Physical Address
-    CM_TOP_CTRL_PIN_MUX_CTRL_4=0xd3880110  # PIN_MUX Physical Address
+    val=`devmem $SUN_TOP_CTRL_PIN_MUX_CTRL_4`
+    val=$(($val & 0x0000FFFF)) 
+    devmem $SUN_TOP_CTRL_PIN_MUX_CTRL_4 32 $val
 
-    GPIO_DIR_31_00=0xf040a008       # PIN_DIR Physical Address
-
-    GPIO_DATA_31_00=0Xf040a004       # PIN_DATA Physical Address
-
-    
-    #read CM_TOP_CTRL_PIN_MUX_CTRL_3
-    val=`devmem $CM_TOP_CTRL_PIN_MUX_CTRL_3`
-    #and value with PINMUX_MASK to enable bnm_gpio_021/022/023 as GPIO
-    val=$(($val&$PINMUX_MASK_3))
-    #write CM_TOP_CTRL_PIN_MUX_CTRL_3
-    devmem $CM_TOP_CTRL_PIN_MUX_CTRL_3 32 $val
-
-    #read CM_TOP_CTRL_PIN_MUX_CTRL_4
-    val=`devmem $CM_TOP_CTRL_PIN_MUX_CTRL_4`
-    #and value with PINMUX_MASK to enable bnm_gpio_024 as GPIO
-    val=$(($val&$PINMUX_MASK_4))
-    #write CM_TOP_CTRL_PIN_MUX_CTRL_4
-    devmem $CM_TOP_CTRL_PIN_MUX_CTRL_4 32 $val
-
-	#read GPIO_DIR_31_00
-	val=`devmem $GPIO_DIR_31_00`
-	#toggle bit 0 to 1 to enable output on bnm_gpio_000
-	val=$(($val & $PINMUX_MASK_3))
-	#write GPIO_PER_DIR_31_00
-	devmem $GPIO_DIR_31_00 32 $val
-	
-	#read GPIO_DIR_31_00
-	val=`devmem $GPIO_DIR_31_00`
-	#toggle bit 0 to 1 to enable output on bnm_gpio_000
-	val=$(($val & $PINMUX_MASK_4))
-	#write GPIO_PER_DIR_31_00
-	devmem $GPIO_DIR_31_00 32 $val
+    val=`devmem $GPIO_DIR_31_00`
+    val=$(($val & 0xFE1FFFFF))  
+    devmem $GPIO_DIR_31_00 32 $val  
 
 	status=$1
 	
