@@ -17,8 +17,8 @@ CM_TOP_CTRL_PIN_MUX_CTRL_1=0xd3880104  #FRNT_LED_G/AU43/BNM_GPIO_000 FRNT_LED_B/
 GPIO_PER_DIR_031_000=0xd3c00500        #FRNT B/G SET"1"=> outut
 GPIO_PER_DATA_031_000=0xd3c00528       #FRNT B/G
 
-AON_PIN_CTRK_PIN_MUX_CTRL_0=0xf0410700 #FRNT_LED_W/B3/AON_GPIO_06 FRNT_LED_R/A4/AON_GPIO_07
-AON_PIN_CTRK_PIN_MUX_CTRL_1=0xf0410704 #FRNT_LED_Y/B2/AON_GPIO_10 MOCA_LED/C4/AON_GPIO_14
+AON_PIN_CTRL_PIN_MUX_CTRL_0=0xf0410700 #FRNT_LED_W/B3/AON_GPIO_06 FRNT_LED_R/A4/AON_GPIO_07
+AON_PIN_CTRL_PIN_MUX_CTRL_1=0xf0410704 #FRNT_LED_Y/B2/AON_GPIO_10 MOCA_LED/C4/AON_GPIO_14
 GIO_AON_IODIR_LO=0xf0417008            #FRNT W/R/Y/MOCA_LED 06/07/10/14 SET"0"=> outut
 GIO_AON_DATA_LO=0xf0417004             #FRNT W/R/Y/MOCA_LED 06/07/10/14 
 
@@ -30,12 +30,12 @@ function LED_Initialize() {
     val=`devmem $CM_TOP_CTRL_PIN_MUX_CTRL_1`   
     val=$(($val & 0xFFFF0FF0))              
     devmem $CM_TOP_CTRL_PIN_MUX_CTRL_1 32 $val 
-    val=`devmem $AON_PIN_CTRK_PIN_MUX_CTRL_0`
+    val=`devmem $AON_PIN_CTRL_PIN_MUX_CTRL_0`
     val=$(($val & 0x00FFFFFF)) 
-    devmem $AON_PIN_CTRK_PIN_MUX_CTRL_0 32 $val
-    val=`devmem $AON_PIN_CTRK_PIN_MUX_CTRL_1`
+    devmem $AON_PIN_CTRL_PIN_MUX_CTRL_0 32 $val
+    val=`devmem $AON_PIN_CTRL_PIN_MUX_CTRL_1`
     val=$(($val & 0xF0FFF0FF)) 
-    devmem $AON_PIN_CTRK_PIN_MUX_CTRL_1 32 $val
+    devmem $AON_PIN_CTRL_PIN_MUX_CTRL_1 32 $val
     val=`devmem $SUN_TOP_CTRL_PIN_MUX_CTRL_4`
     val=$(($val & 0x0000FFFF)) 
     devmem $SUN_TOP_CTRL_PIN_MUX_CTRL_4 32 $val
@@ -136,5 +136,5 @@ elif [ $1 = "MOCAON" ]; then
 elif [ $1 = "MOCAOFF" ]; then 
     LED_Control 10
 else
-    echo "please input B/G/R/Y/W/OFFALL"
+    echo "please input B/G/R/Y/W/FRNTOFF/ETHON/ETHOFF/MOCAON/MOCAOFF"
 fi     
